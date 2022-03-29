@@ -31,8 +31,9 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
         break;
 
       case '.':
+      case ',':
           setViewfinder(viewfinder + ',')
-          setMathExpression(mathExpression + str);
+          setMathExpression(mathExpression + '.');
         break;
     
       case '=':
