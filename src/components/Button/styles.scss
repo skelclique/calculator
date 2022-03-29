@@ -1,0 +1,25 @@
+.button {
+  height: 50px;
+  font-weight: 500;
+  background: #fff;
+
+  color: #835afd;
+  transition: background 0.4s, opacity 0.2s;
+  border: 1px solid #835afd;
+  padding: 0 32px;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  cursor: pointer;
+
+  &:not(:disabled):hover {
+    background: #6F4BD8;
+    color: #fff;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
