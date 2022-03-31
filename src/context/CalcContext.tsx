@@ -17,11 +17,16 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
   const [mathExpression, setMathExpression] = useState("");
 
   function changeViewfinder(str: string) {
+    let isFirst = mathExpression.length === 0;
+
+    let lastChar = mathExpression.charAt(mathExpression.length - 1);
+    let isNumber = isNaN(Number(lastChar));
+    
     switch (str) {
       case '←':
       case 'backspace':
-          setViewfinder(viewfinder.toString().slice(0, -1));
-          setMathExpression(mathExpression.toString().slice(0, -1));
+          setViewfinder(viewfinder.slice(0, -1));
+          setMathExpression(mathExpression.slice(0, -1));
         break;
 
       case 'del':
@@ -30,20 +35,43 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
           setMathExpression('');
         break;
 
+      case '/':
+      case '+':
+      case '-':
+          if (isNumber || isFirst) {
+            return;
+          }
+
+          setViewfinder(viewfinder + str);
+          setMathExpression(mathExpression + str);
+        break;
+
       case '.':
       case ',':
+          if (isNumber || isFirst) {
+            return;
+          }
+
           setViewfinder(viewfinder + ',')
           setMathExpression(mathExpression + '.');
         break;
     
       case '=':
       case 'enter':
-          setViewfinder(eval(mathExpression));
-          setMathExpression(eval(mathExpression));
+          if (isNumber || isFirst) {
+            return;
+          }
+
+          setViewfinder(eval(mathExpression).toString());
+          setMathExpression(eval(mathExpression).toString());
         break;
 
       case '*':
       case '×':
+          if (isNumber || isFirst) {
+            return;
+          }
+
           setViewfinder(viewfinder + '×');
           setMathExpression(mathExpression + '*');
         break;
