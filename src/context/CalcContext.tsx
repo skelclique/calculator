@@ -4,6 +4,8 @@ import { createContext, ReactNode, useState } from "react";
 type CalcContextType = {
   viewfinder: string;
   changeViewfinder: (str: string) => void;
+  darkMode: boolean;
+  changeTheme: () => void;
 };
 
 type CalcContextProviderProps = {
@@ -15,12 +17,17 @@ export const CalcContext = createContext({} as CalcContextType);
 export function CalcContextProvider(props: CalcContextProviderProps) {
   const [viewfinder, setViewfinder] = useState("");
   const [mathExpression, setMathExpression] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+
+  function changeTheme() {
+    setDarkMode(!darkMode);
+  }
 
   function changeViewfinder(str: string) {
     let isFirst = mathExpression.length === 0;
 
     let lastChar = mathExpression.charAt(mathExpression.length - 1);
-    let isNumber = isNaN(Number(lastChar));
+    let isNumber = !isNaN(Number(lastChar));
     
     switch (str) {
       case 'menu':
@@ -42,7 +49,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case '/':
       case '+':
       case '-':
-          if (isNumber || isFirst) {
+          if (!isNumber || isFirst) {
             return;
           }
 
@@ -52,7 +59,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case '.':
       case ',':
-          if (isNumber || isFirst) {
+          if (!isNumber || isFirst) {
             return;
           }
 
@@ -62,7 +69,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
     
       case '=':
       case 'enter':
-          if (isNumber || isFirst) {
+          if (!isNumber || isFirst) {
             return;
           }
 
@@ -72,7 +79,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case '*':
       case '×':
-          if (isNumber || isFirst) {
+          if (!isNumber || isFirst) {
             return;
           }
 
@@ -81,7 +88,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
         break;
 
       case '0':
-          if (isNumber || isFirst) {
+          if (!isNumber || isFirst) {
             return;
           }
 
@@ -97,7 +104,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
   }
 
   return (
-    <CalcContext.Provider value={{ viewfinder, changeViewfinder }}>
+    <CalcContext.Provider value={{ viewfinder, changeViewfinder, darkMode, changeTheme }}>
       {props.children}
     </CalcContext.Provider>
   );
