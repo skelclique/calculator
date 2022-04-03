@@ -23,6 +23,10 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
     let isNumber = isNaN(Number(lastChar));
     
     switch (str) {
+      case 'menu':
+          
+        break;
+
       case '←':
       case 'backspace':
           setViewfinder(viewfinder.slice(0, -1));
@@ -74,6 +78,15 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
           setViewfinder(viewfinder + '×');
           setMathExpression(mathExpression + '*');
+        break;
+
+      case '0':
+          if (isNumber || isFirst) {
+            return;
+          }
+
+          setViewfinder(viewfinder + str);
+          setMathExpression(mathExpression + str);
         break;
 
       default:

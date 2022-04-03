@@ -17,7 +17,7 @@ export function Button({
   return (
     <button 
       className={ children === '0' ? 'button btn-zero' : 'button' }
-      onClick={(e) => children !== 'menu' ? changeViewfinder(children) : null}
+      onClick={(e) => changeViewfinder(children) }
       {...props}
     >
       {

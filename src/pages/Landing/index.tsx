@@ -18,6 +18,7 @@ export function Landing() {
         handleKeys={keys}
         onKeyEvent={(key) => changeViewfinder(key)}
       />
+      
       <div className="container">
         <div className="viewfinder"> {viewfinder || "0"} </div>
         <Button>menu</Button>
