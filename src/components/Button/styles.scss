@@ -13,13 +13,17 @@
   align-items: center;
   
   cursor: pointer;
+}
 
-  &:not(:disabled):hover {
-    background: #6F4BD8;
-    color: #fff;
-  }
-
-  &:active {
-    opacity: 0.5;
+@media (min-width: 700px) {
+  .button {
+    &:not(:disabled):hover {
+      background: #6F4BD8;
+      color: #fff;
+    }
+  
+    &:active {
+      opacity: 0.5;
+    }
   }
 }

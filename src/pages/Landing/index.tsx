@@ -13,9 +13,12 @@ export function Landing() {
     if (darkMode) {
       document.documentElement.style.setProperty('--primary-color', '#fff');
       document.documentElement.style.setProperty('--secondary-color', '#8258fd');
+      document.querySelector('meta[name=theme-color]')?.setAttribute('content', '#8258fd');
+      
     } else {
       document.documentElement.style.setProperty('--primary-color', '#8258fd');
       document.documentElement.style.setProperty('--secondary-color', '#fff');
+      document.querySelector('meta[name=theme-color]')?.setAttribute('content', '#fff');
     }
   }, [darkMode]);
 

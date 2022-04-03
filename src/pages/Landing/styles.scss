@@ -9,6 +9,7 @@ body {
   .container {
     display: grid;
     background: var(--secondary-color);
+    max-width: 350px;
     grid-template-columns: repeat(4, 1fr);
 
     .viewfinder {
