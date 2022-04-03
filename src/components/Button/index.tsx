@@ -1,5 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
-import { FiDelete, FiMenu, FiMinus, FiPlus, FiX } from "react-icons/fi";
+import { FiDelete, FiMinus, FiPlus, FiX } from "react-icons/fi";
+import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
+
 import { useCalc } from "../../hooks/useCalc";
 
 import './styles.scss';
@@ -12,7 +14,7 @@ export function Button({
   children,
   ...props 
 }: ButtonProps) {
-  const {  changeViewfinder } = useCalc();
+  const {  changeViewfinder, darkMode } = useCalc();
 
   return (
     <button 
@@ -25,7 +27,9 @@ export function Button({
         children === '×' ? <FiX /> : null ||
         children === '-' ? <FiMinus /> : null ||
         children === '+' ? <FiPlus /> : null ||
-        children === 'menu' ? <FiMenu /> : children 
+        children === 'darkMode' ? (
+          darkMode ? <MdDarkMode /> : <MdOutlineDarkMode  /> 
+        ) : children 
       }
       
     </button>

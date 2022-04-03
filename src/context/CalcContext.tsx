@@ -5,7 +5,6 @@ type CalcContextType = {
   viewfinder: string;
   changeViewfinder: (str: string) => void;
   darkMode: boolean;
-  changeTheme: () => void;
 };
 
 type CalcContextProviderProps = {
@@ -19,10 +18,6 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
   const [mathExpression, setMathExpression] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
-  function changeTheme() {
-    setDarkMode(!darkMode);
-  }
-
   function changeViewfinder(str: string) {
     let isFirst = mathExpression.length === 0;
 
@@ -30,8 +25,8 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
     let isNumber = !isNaN(Number(lastChar));
     
     switch (str) {
-      case 'menu':
-          
+      case 'darkMode':
+         setDarkMode(!darkMode);
         break;
 
       case '←':
@@ -104,7 +99,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
   }
 
   return (
-    <CalcContext.Provider value={{ viewfinder, changeViewfinder, darkMode, changeTheme }}>
+    <CalcContext.Provider value={{ viewfinder, changeViewfinder, darkMode }}>
       {props.children}
     </CalcContext.Provider>
   );

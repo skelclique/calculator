@@ -1,6 +1,5 @@
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import { useEffect } from "react";
-import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 
 import { useCalc } from "../../hooks/useCalc";
 import { Button } from "../../components/Button";
@@ -8,7 +7,7 @@ import { Button } from "../../components/Button";
 import "./styles.scss";
 
 export function Landing() {
-  const { viewfinder, changeViewfinder, darkMode, changeTheme } = useCalc();
+  const { viewfinder, changeViewfinder, darkMode } = useCalc();
 
   useEffect(() => {
     if (darkMode) {
@@ -32,14 +31,9 @@ export function Landing() {
         onKeyEvent={(key) => changeViewfinder(key)}
       />
 
-      { darkMode ? 
-        <MdDarkMode onClick={changeTheme}/> : 
-        <MdOutlineDarkMode onClick={changeTheme} /> 
-      }     
-      
       <div className="container">
         <div className="viewfinder"> {viewfinder || "0"} </div>
-        <Button>menu</Button>
+        <Button>darkMode</Button>
         <Button>/</Button>
         <Button>C</Button>
         <Button>←</Button>
