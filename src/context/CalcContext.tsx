@@ -14,12 +14,12 @@ type CalcContextProviderProps = {
 export const CalcContext = createContext({} as CalcContextType);
 
 export function CalcContextProvider(props: CalcContextProviderProps) {
-  const [viewfinder, setViewfinder] = useState("");
-  const [mathExpression, setMathExpression] = useState("");
+  const [viewfinder, setViewfinder] = useState("0");
+  const [mathExpression, setMathExpression] = useState("0");
   const [darkMode, setDarkMode] = useState(false);
 
   function changeViewfinder(str: string) {
-    let isFirst = mathExpression.length === 0;
+    let isFirst = mathExpression === '0';
 
     let lastChar = mathExpression.charAt(mathExpression.length - 1);
     let isNumber = !isNaN(Number(lastChar));
@@ -37,8 +37,8 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case 'del':
       case 'C':
-          setViewfinder('');
-          setMathExpression('');
+          setViewfinder('0');
+          setMathExpression('0');
         break;
 
       case '/':
@@ -54,7 +54,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case '.':
       case ',':
-          if (!isNumber || isFirst) {
+          if (!isNumber) {
             return;
           }
 
@@ -68,7 +68,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
             return;
           }
 
-          setViewfinder(eval(mathExpression).toString());
+          setViewfinder(eval(mathExpression).toString().replaceAll('.', ','));
           setMathExpression(eval(mathExpression).toString());
         break;
 
@@ -83,7 +83,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
         break;
 
       case '0':
-          if (!isNumber || isFirst) {
+          if (isFirst) {
             return;
           }
 
@@ -92,10 +92,22 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
         break;
 
       default:
+          if (isFirst) {
+            setViewfinder(str);
+            setMathExpression(str);
+            return;
+          }
+          
           setViewfinder(viewfinder + str);
           setMathExpression(mathExpression + str);
         break;
     }
+
+    // debug
+    console.clear();
+    console.log(`viewfinder: (${viewfinder})`);
+    console.log(`mathexpression: (${mathExpression})`);
+    console.log(`darkmode: ${darkMode}`);
   }
 
   return (

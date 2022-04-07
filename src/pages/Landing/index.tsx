@@ -35,7 +35,7 @@ export function Landing() {
       />
 
       <div className="container">
-        <div className="viewfinder"> {viewfinder || "0"} </div>
+        <div className="viewfinder"> {viewfinder} </div>
         <Button>darkMode</Button>
         <Button>/</Button>
         <Button>C</Button>
