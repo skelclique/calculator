@@ -102,12 +102,6 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
           setMathExpression(mathExpression + str);
         break;
     }
-
-    // debug
-    console.clear();
-    console.log(`viewfinder: (${viewfinder})`);
-    console.log(`mathexpression: (${mathExpression})`);
-    console.log(`darkmode: ${darkMode}`);
   }
 
   return (

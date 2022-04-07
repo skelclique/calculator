@@ -5,7 +5,9 @@
 
   color: #835afd;
   transition: background 0.4s, opacity 0.2s;
-  border: 1px solid #835afd;
+  border: 0;
+  border-top: 1px solid var(--primary-color);
+  border-right: 1px solid var(--primary-color);
   padding: 0 32px;
   
   display: flex;
