@@ -7,7 +7,7 @@ import { Button } from "../../components/Button";
 import "./styles.scss";
 
 export function Landing() {
-  const { viewfinder, changeViewfinder, darkMode } = useCalc();
+  const { viewfinder, changeViewfinder, darkMode, result } = useCalc();
 
   useEffect(() => {
     if (darkMode) {
@@ -35,7 +35,10 @@ export function Landing() {
       />
 
       <div className="container">
-        <div className="viewfinder"> {viewfinder} </div>
+        <div className="viewfinder">
+          <p> {viewfinder} </p>
+          {result}
+        </div>
         <Button>darkMode</Button>
         <Button>/</Button>
         <Button>C</Button>

@@ -3,6 +3,7 @@ import { createContext, ReactNode, useState } from "react";
 
 type CalcContextType = {
   viewfinder: string;
+  result: string;
   changeViewfinder: (str: string) => void;
   darkMode: boolean;
 };
@@ -14,98 +15,116 @@ type CalcContextProviderProps = {
 export const CalcContext = createContext({} as CalcContextType);
 
 export function CalcContextProvider(props: CalcContextProviderProps) {
-  const [viewfinder, setViewfinder] = useState("0");
+  const [viewfinder, setViewfinder] = useState("");
+  const [result, setResult] = useState("0");
   const [mathExpression, setMathExpression] = useState("0");
   const [darkMode, setDarkMode] = useState(false);
 
   function changeViewfinder(str: string) {
-    let isFirst = mathExpression === '0';
+    let isFirst = mathExpression === "0";
 
     let lastChar = mathExpression.charAt(mathExpression.length - 1);
     let isNumber = !isNaN(Number(lastChar));
-    
+
     switch (str) {
-      case 'darkMode':
-         setDarkMode(!darkMode);
+      case "darkMode":
+        setDarkMode(!darkMode);
         break;
 
-      case '←':
-      case 'backspace':
-          setViewfinder(viewfinder.slice(0, -1));
-          setMathExpression(mathExpression.slice(0, -1));
+      case "←":
+      case "backspace":
+        setResult(result.slice(0, -1));
+        setMathExpression(mathExpression.slice(0, -1));
         break;
 
-      case 'del':
-      case 'C':
-          setViewfinder('0');
-          setMathExpression('0');
+      case "del":
+      case "C":
+        setViewfinder("");
+        setResult("0");
+        setMathExpression("0");
         break;
 
-      case '/':
-      case '+':
-      case '-':
-          if (!isNumber || isFirst) {
-            return;
-          }
+      case "/":
+      case "+":
+      case "-":
+      case "*":
+      case "×":
+        if (!isNumber || isFirst) {
+          return;
+        }
 
-          setViewfinder(viewfinder + str);
-          setMathExpression(mathExpression + str);
+        if (viewfinder.includes("=")) {
+          setViewfinder(result + str.replace("*", "×"));
+          setResult("0");
+          setMathExpression(mathExpression + str.replace("×", "*"));
+          return;
+        }
+
+        setViewfinder(viewfinder + result + str.replace("*", "×"));
+        setResult("0");
+        setMathExpression(mathExpression + str.replace("×", "*"));
         break;
 
-      case '.':
-      case ',':
-          if (!isNumber) {
-            return;
-          }
+      case ".":
+      case ",":
+        if (!isNumber) {
+          return;
+        }
 
-          setViewfinder(viewfinder + ',')
-          setMathExpression(mathExpression + '.');
-        break;
-    
-      case '=':
-      case 'enter':
-          if (!isNumber || isFirst) {
-            return;
-          }
-
-          setViewfinder(eval(mathExpression).toString().replaceAll('.', ','));
-          setMathExpression(eval(mathExpression).toString());
+        setResult(result + ",");
+        setMathExpression(mathExpression + ".");
         break;
 
-      case '*':
-      case '×':
-          if (!isNumber || isFirst) {
-            return;
-          }
+      case "=":
+      case "enter":
+        if (!isNumber || isFirst) {
+          return;
+        }
 
-          setViewfinder(viewfinder + '×');
-          setMathExpression(mathExpression + '*');
+        setViewfinder(mathExpression.replaceAll("*", "×").replaceAll('.', ',') + str.replace('enter', '='));
+        setResult(eval(mathExpression).toString().replaceAll(".", ","));
+        setMathExpression(eval(mathExpression).toString());
         break;
 
-      case '0':
-          if (isFirst) {
-            return;
-          }
+      case "0":
+        if (isFirst) {
+          return;
+        }
 
-          setViewfinder(viewfinder + str);
-          setMathExpression(mathExpression + str);
+        setResult(result + str);
+        setMathExpression(mathExpression + str);
         break;
 
       default:
-          if (isFirst) {
-            setViewfinder(str);
-            setMathExpression(str);
-            return;
-          }
-          
-          setViewfinder(viewfinder + str);
+        if (isFirst) {
+          setResult(str);
+          setMathExpression(str);
+          return;
+        }
+
+        if (result === "0") {
+          setResult(str);
           setMathExpression(mathExpression + str);
+          return;
+        }
+
+        if (viewfinder.includes("=")) {
+          setViewfinder('');
+          setResult(str);
+          setMathExpression(str);
+          return;
+        }
+
+        setResult(result + str);
+        setMathExpression(mathExpression + str);
         break;
     }
   }
 
   return (
-    <CalcContext.Provider value={{ viewfinder, changeViewfinder, darkMode }}>
+    <CalcContext.Provider
+      value={{ viewfinder, changeViewfinder, darkMode, result }}
+    >
       {props.children}
     </CalcContext.Provider>
   );

@@ -17,11 +17,17 @@ body {
 
     .viewfinder {
       grid-column: span 4;
+      max-width: 100%;
+      overflow-wrap: break-word;
+      border-right: 1px solid var(--primary-color);
+
       font: 2.2rem monospace;
       text-align: right;
-      overflow-wrap: break-word;
-      max-width: 100%;
-      border-right: 1px solid var(--primary-color);
+      letter-spacing: 2px;
+
+      p {
+        font: 1.4rem monospace;
+      }
     }
 
     .btn-zero {
