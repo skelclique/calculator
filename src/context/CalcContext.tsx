@@ -33,6 +33,17 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case "←":
       case "backspace":
+        if (isFirst) {
+          return;
+        }
+
+        if (result.length === 1) {
+          setViewfinder("");
+          setResult("0");
+          setMathExpression("0");
+          return;
+        }
+
         setResult(result.slice(0, -1));
         setMathExpression(mathExpression.slice(0, -1));
         break;
@@ -67,11 +78,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case ".":
       case ",":
-        if (!isNumber || result.includes(',')) {
-          return;
-        }
-
-        if (viewfinder.includes("=")) {
+        if (!isNumber || result.includes(',') || viewfinder.includes("=")) {
           return;
         }
 
