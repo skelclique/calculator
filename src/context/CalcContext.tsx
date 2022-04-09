@@ -22,8 +22,8 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
   function changeViewfinder(str: string) {
     let isFirst = mathExpression === "0";
-
-    let lastChar = mathExpression.charAt(mathExpression.length - 1);
+    
+    let lastChar = result === '0' ? result : mathExpression.charAt(mathExpression.length - 1);
     let isNumber = !isNaN(Number(lastChar));
 
     switch (str) {
@@ -67,12 +67,13 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case ".":
       case ",":
-        if (!isNumber) {
+        if (!isNumber || result.includes(',')) {
           return;
         }
 
         setResult(result + ",");
         setMathExpression(mathExpression + ".");
+
         break;
 
       case "=":
@@ -80,7 +81,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
         if (!isNumber || isFirst) {
           return;
         }
-
+        
         setViewfinder(mathExpression.replaceAll("*", "×").replaceAll('.', ',') + str.replace('enter', '='));
         setResult(eval(mathExpression).toString().replaceAll(".", ","));
         setMathExpression(eval(mathExpression).toString());
@@ -88,6 +89,12 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case "0":
         if (isFirst) {
+          return;
+        }
+
+        if (result === "0") {
+          setResult(str);
+          setMathExpression(mathExpression + str);
           return;
         }
 
