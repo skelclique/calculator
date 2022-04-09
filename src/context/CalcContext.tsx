@@ -71,6 +71,10 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
           return;
         }
 
+        if (viewfinder.includes("=")) {
+          return;
+        }
+
         setResult(result + ",");
         setMathExpression(mathExpression + ".");
 
@@ -92,9 +96,10 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
           return;
         }
 
-        if (result === "0") {
+        if (viewfinder.includes("=")) {
+          setViewfinder('');
           setResult(str);
-          setMathExpression(mathExpression + str);
+          setMathExpression(str);
           return;
         }
 
