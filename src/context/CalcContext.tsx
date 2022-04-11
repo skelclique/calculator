@@ -17,15 +17,10 @@ export const CalcContext = createContext({} as CalcContextType);
 export function CalcContextProvider(props: CalcContextProviderProps) {
   const [viewfinder, setViewfinder] = useState("");
   const [result, setResult] = useState("0");
-  const [mathExpression, setMathExpression] = useState("0");
+  const [mathExpression, setMathExpression] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
   function changeViewfinder(str: string) {
-    let isFirst = mathExpression === "0";
-    
-    let lastChar = result === '0' ? result : mathExpression.charAt(mathExpression.length - 1);
-    let isNumber = !isNaN(Number(lastChar));
-
     switch (str) {
       case "darkMode":
         setDarkMode(!darkMode);
@@ -33,26 +28,25 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
       case "←":
       case "backspace":
-        if (isFirst) {
-          return;
-        }
-
         if (result.length === 1) {
-          setViewfinder("");
           setResult("0");
-          setMathExpression("0");
+
+          if (viewfinder.length > 0 && result === '0') {
+            setViewfinder(viewfinder.slice(0, -1));
+            setMathExpression(mathExpression.slice(0, -1));
+          }
           return;
-        }
+        }  
 
         setResult(result.slice(0, -1));
-        setMathExpression(mathExpression.slice(0, -1));
         break;
 
       case "del":
       case "C":
         setViewfinder("");
+        setMathExpression("");
         setResult("0");
-        setMathExpression("0");
+
         break;
 
       case "/":
@@ -60,82 +54,53 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case "-":
       case "*":
       case "×":
-        if (!isNumber || isFirst) {
-          return;
-        }
-
         if (viewfinder.includes("=")) {
-          setViewfinder(result + str.replace("*", "×"));
+          setViewfinder(result + str.replaceAll("*", "×"));
+          setMathExpression(result + str.replaceAll("×", "*"));
           setResult("0");
-          setMathExpression(mathExpression + str.replace("×", "*"));
           return;
         }
 
-        setViewfinder(viewfinder + result + str.replace("*", "×"));
+        setMathExpression(mathExpression + result.replaceAll(',', '.') + str.replaceAll("×", "*"));
+        setViewfinder(viewfinder + result.replaceAll('.', ',') + str.replaceAll("*", "×"));
         setResult("0");
-        setMathExpression(mathExpression + str.replace("×", "*"));
+
         break;
 
       case ".":
       case ",":
-        if (!isNumber || result.includes(',') || viewfinder.includes("=")) {
-          return;
-        }
+        if (result.includes(',')) return;
 
-        setResult(result + ",");
-        setMathExpression(mathExpression + ".");
-
+        setResult(result + ',');
         break;
 
       case "=":
       case "enter":
-        if (!isNumber || isFirst) {
-          return;
-        }
-        
-        setViewfinder(mathExpression.replaceAll("*", "×").replaceAll('.', ',') + str.replace('enter', '='));
-        setResult(eval(mathExpression).toString().replaceAll(".", ","));
-        setMathExpression(eval(mathExpression).toString());
-        break;
+        if (viewfinder.includes("=")) return;
 
-      case "0":
-        if (isFirst) {
-          return;
-        }
+        setMathExpression(eval(mathExpression + result));
+        setViewfinder(viewfinder + result + "=");
+        setResult(eval(mathExpression + result.replaceAll(',', '.')).replaceAll(',', '.'));
 
-        if (viewfinder.includes("=")) {
-          setViewfinder('');
-          setResult(str);
-          setMathExpression(str);
-          return;
+        if (eval(mathExpression + result) === Infinity) {
+          setResult("Impossível dividir por zero");
         }
-
-        setResult(result + str);
-        setMathExpression(mathExpression + str);
         break;
 
       default:
-        if (isFirst) {
-          setResult(str);
-          setMathExpression(str);
-          return;
-        }
-
         if (result === "0") {
           setResult(str);
-          setMathExpression(mathExpression + str);
           return;
         }
 
         if (viewfinder.includes("=")) {
-          setViewfinder('');
+          setViewfinder("");
+          setMathExpression("");
           setResult(str);
-          setMathExpression(str);
           return;
         }
 
         setResult(result + str);
-        setMathExpression(mathExpression + str);
         break;
     }
   }
