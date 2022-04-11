@@ -46,6 +46,7 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case "C":
         setViewfinder("");
         setResult("0");
+        setReset(false);
 
         break;
 
