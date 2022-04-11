@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-eval */
 import { createContext, ReactNode, useState } from "react";
 
@@ -56,6 +57,8 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case "-":
       case "*":
       case "×":
+        if (result === '0') return;
+
         if (viewfinder.includes("=")) {
           setViewfinder(result + str.replaceAll("*", "×"));
           setResult("0");
@@ -64,7 +67,6 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
         calcExpression = eval(viewfinder.replaceAll('×', '*').replaceAll(',', '.') + result.replaceAll('×', '*').replaceAll(',', '.'));
         
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         calcExpression % 1 ? calcExpression = calcExpression.toFixed(1) : null;
 
         calcExpression = calcExpression.toString().replaceAll('.', ',');
@@ -88,9 +90,10 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
         calcExpression = eval(viewfinder.replaceAll('×', '*').replaceAll(',', '.') + result.replaceAll('×', '*').replaceAll(',', '.'));
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         calcExpression % 1 ? calcExpression = calcExpression.toFixed(1) : null;
 
+        calcExpression === Infinity ? calcExpression = 'Não é possível dividir por zero' : null;
+        
         calcExpression = calcExpression.toString().replaceAll('.', ',');
 
         setViewfinder(viewfinder + result + "=");
