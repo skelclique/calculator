@@ -2,10 +2,10 @@
 import { createContext, ReactNode, useState } from "react";
 
 type CalcContextType = {
-  viewfinder: string;
-  result: string;
   changeViewfinder: (str: string) => void;
+  viewfinder: string;
   darkMode: boolean;
+  result: string;
 };
 
 type CalcContextProviderProps = {
@@ -17,10 +17,12 @@ export const CalcContext = createContext({} as CalcContextType);
 export function CalcContextProvider(props: CalcContextProviderProps) {
   const [viewfinder, setViewfinder] = useState("");
   const [result, setResult] = useState("0");
-  const [mathExpression, setMathExpression] = useState("");
+  const [reset, setReset] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
   function changeViewfinder(str: string) {
+    let calcExpression;
+
     switch (str) {
       case "darkMode":
         setDarkMode(!darkMode);
@@ -33,7 +35,6 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
           if (viewfinder.length > 0 && result === '0') {
             setViewfinder(viewfinder.slice(0, -1));
-            setMathExpression(mathExpression.slice(0, -1));
           }
           return;
         }  
@@ -44,7 +45,6 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case "del":
       case "C":
         setViewfinder("");
-        setMathExpression("");
         setResult("0");
 
         break;
@@ -56,14 +56,20 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case "×":
         if (viewfinder.includes("=")) {
           setViewfinder(result + str.replaceAll("*", "×"));
-          setMathExpression(result + str.replaceAll("×", "*"));
           setResult("0");
           return;
         }
 
-        setMathExpression(mathExpression + result.replaceAll(',', '.') + str.replaceAll("×", "*"));
-        setViewfinder(viewfinder + result.replaceAll('.', ',') + str.replaceAll("*", "×"));
-        setResult("0");
+        calcExpression = eval(viewfinder.replaceAll('×', '*').replaceAll(',', '.') + result.replaceAll('×', '*').replaceAll(',', '.'));
+        
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        calcExpression % 1 ? calcExpression = calcExpression.toFixed(1) : null;
+
+        calcExpression = calcExpression.toString().replaceAll('.', ',');
+
+        setViewfinder(calcExpression + str.replaceAll("*", "×"));
+        setResult(result);
+        setReset(true);
 
         break;
 
@@ -78,13 +84,15 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
       case "enter":
         if (viewfinder.includes("=")) return;
 
-        setMathExpression(eval(mathExpression + result));
-        setViewfinder(viewfinder + result + "=");
-        setResult(eval(mathExpression + result.replaceAll(',', '.')).replaceAll(',', '.'));
+        calcExpression = eval(viewfinder.replaceAll('×', '*').replaceAll(',', '.') + result.replaceAll('×', '*').replaceAll(',', '.'));
 
-        if (eval(mathExpression + result) === Infinity) {
-          setResult("Impossível dividir por zero");
-        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        calcExpression % 1 ? calcExpression = calcExpression.toFixed(1) : null;
+
+        calcExpression = calcExpression.toString().replaceAll('.', ',');
+
+        setViewfinder(viewfinder + result + "=");
+        setResult(calcExpression);
         break;
 
       default:
@@ -93,9 +101,14 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
           return;
         }
 
+        if (reset) {
+          setResult(str);
+          setReset(false);
+          return;
+        }
+
         if (viewfinder.includes("=")) {
           setViewfinder("");
-          setMathExpression("");
           setResult(str);
           return;
         }
@@ -107,7 +120,12 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
 
   return (
     <CalcContext.Provider
-      value={{ viewfinder, changeViewfinder, darkMode, result }}
+      value={{ 
+        changeViewfinder, 
+        viewfinder, 
+        darkMode, 
+        result
+      }}
     >
       {props.children}
     </CalcContext.Provider>

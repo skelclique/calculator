@@ -7,7 +7,12 @@ import { Button } from "../../components/Button";
 import "./styles.scss";
 
 export function Landing() {
-  const { viewfinder, changeViewfinder, darkMode, result } = useCalc();
+  const { 
+    changeViewfinder,
+    viewfinder, 
+    darkMode, 
+    result
+  } = useCalc();
 
   useEffect(() => {
     if (darkMode) {
