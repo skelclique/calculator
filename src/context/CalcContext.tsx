@@ -36,6 +36,8 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
           if (viewfinder.length > 0 && result === '0') {
             setViewfinder(viewfinder.slice(0, -1));
           }
+
+          if (viewfinder.length === 0) setReset(false);
           return;
         }  
 
