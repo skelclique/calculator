@@ -34,7 +34,7 @@ Basic calculator for your math expressions :)
 
 ## :sparkles: Features ##
 
-:heavy_check_mark: Calc math expressions;
+:heavy_check_mark: Calc math expressions;  
 :heavy_check_mark: Dark mode;
 
 ## :rocket: Technologies ##
