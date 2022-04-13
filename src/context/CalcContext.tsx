@@ -101,6 +101,8 @@ export function CalcContextProvider(props: CalcContextProviderProps) {
         break;
 
       default:
+        if (result.length >= 20) return;
+      
         if (result === "0") {
           setResult(str);
           return;
