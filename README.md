@@ -30,13 +30,12 @@
 
 ## :dart: About ##
 
-Basic calculator for your math expressions 🔢
+Basic calculator for your math expressions :)
 
 ## :sparkles: Features ##
 
 :heavy_check_mark: Calc math expressions;\
 :heavy_check_mark: Dark mode;\
-:heavy_check_mark: Decimal calcs;
 
 ## :rocket: Technologies ##
 
